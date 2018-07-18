@@ -1,11 +1,21 @@
+target
+target/
 /target/
 /classes/
-/log/  
-/logs/ 
+log
+log/
+/log/
+/logs/
 .classpath
 .project
 .settings  
-.myeclipse    
+.myeclipse   
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+ 
  ##filter databfile ln file##
 *.mdb  
 *.ldb  
