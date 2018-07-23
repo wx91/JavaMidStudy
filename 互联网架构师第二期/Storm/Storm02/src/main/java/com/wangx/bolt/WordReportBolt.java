@@ -30,11 +30,12 @@ public class WordReportBolt extends BaseRichBolt {
 	}
 
 	public void cleanup() {
-		System.out.println("-----------------Final Counts-------------------");
+		System.out.println("-------------Final Counts--------------");
 		List<String> keys = new ArrayList<String>();
 		keys.addAll(this.counts.keySet());
 		for (String key : keys) {
 			System.out.println(key + ":" + this.counts.get(key));
 		}
+		System.out.println("--------------------------------------");
 	}
 }
