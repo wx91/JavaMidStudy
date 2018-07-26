@@ -28,6 +28,7 @@ public class TridentFilter {
 			return false;
 		}
 	}
+
 	// 继承BaseFunction类，重写execute方法
 	public static class Result extends BaseFunction {
 
@@ -42,38 +43,31 @@ public class TridentFilter {
 		}
 
 	}
+
 	public static StormTopology buildTopology() {
 		TridentTopology topology = new TridentTopology();
 		// 设定数据源
-		FixedBatchSpout spout = new FixedBatchSpout(
-				new Fields("a", "b", "c", "d"),//声明输入的域字段为"a","b","c","d"
-				4, //设置批处理的次数为1
-				//设置数据源内容，测试数据
-				new Values(1, 4, 7, 10),
-				new Values(1, 1, 3, 11),
-				new Values(2, 2, 7, 11), 
-				new Values(2, 5, 7, 2));
+		FixedBatchSpout spout = new FixedBatchSpout(new Fields("a", "b", "c", "d"), // 声明输入的域字段为"a","b","c","d"
+				4, // 设置批处理的次数为1
+					// 设置数据源内容，测试数据
+				new Values(1, 4, 7, 10), new Values(1, 1, 3, 11), new Values(2, 2, 7, 11), new Values(2, 5, 7, 2));
 		spout.setCycle(false);
-		//指定输入源spout
+		// 指定输入源spout
 		Stream inputStream = topology.newStream("spout", spout);
 		/**
-		 *  要实现spout - bolt的模式在trident里是使用each来做的
-		 *  each 方法参数
-		 *  1.输入数据源参数名称："a","b","c","d"
-		 *  2.需要流转执行的function对象(也就是bolt对象):new SumFunciton()
-		 *  3.指定function对象里的输出参数名称：sum
+		 * 要实现spout - bolt的模式在trident里是使用each来做的 each 方法参数 1.输入数据源参数名称："a","b","c","d"
+		 * 2.需要流转执行的function对象(也就是bolt对象):new SumFunciton() 3.指定function对象里的输出参数名称：sum
 		 */
-		inputStream.each(new Fields("a","b","c","d"),  new CheckEvenSumFilter())
-		/**
-		 * 继续使用each调用下一个function(bolt)
-		 * 第一个输入参数为："a","b","c","d","sum"
-		 * 第二个参数为：new Result() 也就是执行函数，第三个函数为没有输出
-		 */
-		.each(new Fields("a","b","c","d"),  new Result(), new Fields());
+		inputStream.each(new Fields("a", "b", "c", "d"), new CheckEvenSumFilter())
+				/**
+				 * 继续使用each调用下一个function(bolt) 第一个输入参数为："a","b","c","d","sum" 第二个参数为：new
+				 * Result() 也就是执行函数，第三个函数为没有输出
+				 */
+				.each(new Fields("a", "b", "c", "d"), new Result(), new Fields());
 		return topology.build();
 	}
 
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception {
 		Config conf = new Config();
 		// 设置batch最大处理
 		conf.setNumWorkers(2);
