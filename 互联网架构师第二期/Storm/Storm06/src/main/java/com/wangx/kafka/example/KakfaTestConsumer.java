@@ -1,4 +1,4 @@
-package com.wangx.example;
+package com.wangx.kafka.example;
 
 import java.util.Properties;
 
