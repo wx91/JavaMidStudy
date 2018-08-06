@@ -1,0 +1,17 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+	xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用户计算依赖关系，不是匹配条件不要与提供方一样 -->
+	<dubbo:application name="sample-consumer" />
+
+	<dubbo:registry
+		address="zookeeper://192.168.217.130:2181" />
+
+	<!-- 生成远程代理服务，可以像使用本bean一样使用sampleService 检查级联依赖关系默认为true，当有依赖服务的时候，需要根据需求进行设置 -->
+	<dubbo:reference id="sampleService" check="false"
+		interface="com.wangx.dubbo.sample.SampleService" />
+
+</beans>
