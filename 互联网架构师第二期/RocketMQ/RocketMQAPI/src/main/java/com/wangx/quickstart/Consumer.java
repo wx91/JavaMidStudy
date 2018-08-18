@@ -1,4 +1,4 @@
-package com.wangx.transaction;
+package com.wangx.quickstart;
 
 import java.util.List;
 
@@ -7,12 +7,7 @@ import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
-import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.common.message.MessageExt;
-
-import com.sun.corba.se.pept.transport.EventHandler;
-
-import sun.launcher.resources.launcher;
 
 public class Consumer {
 	public static void main(String[] args) throws Exception {
@@ -27,6 +22,7 @@ public class Consumer {
 			public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 				// System.out.println(Thread.currentThread().getName() + "Receive New Message："
 				// + msgs);
+				MessageExt message = msgs.get(0);
 				try {
 					for (MessageExt msg : msgs) {
 						String topic = msg.getTopic();
@@ -35,8 +31,20 @@ public class Consumer {
 						System.out.println("接受消息：" + "topic：" + topic + "tags：" + tags + "msg：" + msgBody);
 						// String orignMsgId
 						// msg.getProperties().get(MessageConst.PROPERTY_ORIGIN_MESSAGE_ID);
+						if ("Hello RocketMQ 4".equals(msgBody)) {
+							System.out.println("失败消息开始");
+							System.out.println(msg);
+							System.out.println(msgBody);
+							System.out.println("失败消息结束");
+							// 异常
+							int a = 1 / 0;
+						}
 					}
 				} catch (Exception e) {
+					if (message.getReconsumeTimes() == 2) {
+						System.out.println("重试2次以后，还是没有成功，记录日志操作");
+						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+					}
 					return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 				}
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

@@ -1,4 +1,4 @@
-package com.wangx.transaction;
+package com.wangx.quickstart;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -11,8 +11,9 @@ public class Producer {
 		producer.start();
 		for (int i = 0; i < 100; i++) {
 			try {// topic tag body
-				Message msg = new Message("TopicQuickStart", "TagA", ("Hello RocketMQ" + i).getBytes());
+				Message msg = new Message("TopicQuickStart", "TagA", ("Hello RocketMQ " + i).getBytes());
 				SendResult sendResult = producer.send(msg);
+//				SendResult sendResult = producer.send(msg,1000);
 				System.out.println(sendResult);
 			} catch (Exception e) {
 				e.printStackTrace();
