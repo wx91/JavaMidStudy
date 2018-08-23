@@ -60,7 +60,7 @@ public class Producer {
 		}
 		/**
 		 * 应用退出时，要调用shutdown来清理支援，关闭网络连接，从MetaQ服务器上注销自己
-		 * 
+		 * 注意：我们建议应用在JBoss，Tomcat等容器的推出钩子里调用shutdown方法
 		 */
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
