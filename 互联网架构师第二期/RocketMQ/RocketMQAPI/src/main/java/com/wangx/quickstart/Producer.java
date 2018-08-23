@@ -1,8 +1,8 @@
 package com.wangx.quickstart;
 
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
 
 public class Producer {
 	public static void main(String[] args) throws Exception {
@@ -13,7 +13,7 @@ public class Producer {
 			try {// topic tag body
 				Message msg = new Message("TopicQuickStart", "TagA", ("Hello RocketMQ " + i).getBytes());
 				SendResult sendResult = producer.send(msg);
-//				SendResult sendResult = producer.send(msg,1000);
+				// SendResult sendResult = producer.send(msg,1000);
 				System.out.println(sendResult);
 			} catch (Exception e) {
 				e.printStackTrace();

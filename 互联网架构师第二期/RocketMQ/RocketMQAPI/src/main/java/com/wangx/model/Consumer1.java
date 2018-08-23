@@ -2,11 +2,12 @@ package com.wangx.model;
 
 import java.util.List;
 
-import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 
 public class Consumer1 {
 	public static void main(String[] args) {
@@ -16,7 +17,7 @@ public class Consumer1 {
 			consumer.setNamesrvAddr("192.168.217.130:9876");
 			consumer.subscribe("Topic1", "Tag1||Tag2||Tag3");
 			// 广播模式需要钱启动Consumer
-			// consumer.setMessageModel(MessageModel.BROADCASTING);
+			 consumer.setMessageModel(MessageModel.CLUSTERING);
 			consumer.registerMessageListener(new MessageListenerConcurrently() {
 				public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
 						ConsumeConcurrentlyContext context) {
