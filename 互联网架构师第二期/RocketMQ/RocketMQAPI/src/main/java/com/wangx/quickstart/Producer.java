@@ -8,6 +8,13 @@ public class Producer {
 	public static void main(String[] args) throws Exception {
 		DefaultMQProducer producer = new DefaultMQProducer("quickstart_producer");
 		producer.setNamesrvAddr("192.168.217.130:9876");
+		
+//		producer.createTopic(key, newTopic, queueNum);
+//		producer.setRetryTimesWhenSendFailed(10);
+//		producer.setCompressMsgBodyOverHowmuch(1024*1024*5);
+//		producer.setHeartbeatBrokerInterval(1000*15);
+//		producer.setMaxMessageSize(1024*1025*20);
+		
 		producer.start();
 		for (int i = 0; i < 100; i++) {
 			try {// topic tag body

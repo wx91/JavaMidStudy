@@ -17,6 +17,19 @@ public class Consumer {
 		 * 设置Consuner第一次启动是从头部开始消费还是队列尾部开始消费 如果非第一次启动， 那么按照上次消费的位置进行消费
 		 */
 		consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+		//消费线程最小数量：默认10
+		consumer.setConsumeThreadMin(10);
+		//消费线程池最大数量：默认20
+		consumer.setConsumeThreadMax(20);
+		//拉消息本地队列缓存消息最大数：默认1000
+		consumer.setPullThresholdForQueue(1000);
+		//批量消费，一次消费多少条消息：默认1条
+		consumer.setConsumeMessageBatchMaxSize(1);
+		//批量拉消息，一次最多拉多少条，默认32
+		consumer.setPullBatchSize(32);
+		//消息拉取线程每隔多久拉取一次，默认为0
+		consumer.setPullInterval(0);
+		
 		consumer.subscribe("TopicQuickStart", "*");
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 			public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
