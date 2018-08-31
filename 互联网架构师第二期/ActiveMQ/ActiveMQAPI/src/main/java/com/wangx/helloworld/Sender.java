@@ -9,7 +9,6 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.BlobMessage;
 
 public class Sender {
 	public static void main(String[] args) throws Exception {
