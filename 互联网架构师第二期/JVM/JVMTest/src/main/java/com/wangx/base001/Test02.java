@@ -2,8 +2,8 @@ package com.wangx.base001;
 
 public class Test02 {
 	public static void main(String[] args) {
-		// 第一次配置
-		// -Xms20m -Xmx20m -Xmn1m -XX:SurvivorRatio=2 -XX:+PrintGCDetails
+		// 第一次配置	eden 2 = from 1 + to 1
+		// -Xms20m -Xmx20m -Xmn2m -XX:SurvivorRatio=2 -XX:+PrintGCDetails
 		// -XX:+UseSerialGC
 
 		// 第二次配置
