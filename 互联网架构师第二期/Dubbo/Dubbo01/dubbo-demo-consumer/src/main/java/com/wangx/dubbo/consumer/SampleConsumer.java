@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.wangx.dubbo.entity.User;
-import com.wangx.dubbo.sample.SampleService;
+import com.wangx.dubbo.service.SampleService;
 
 public class SampleConsumer {
 	public static void main(String[] args) throws Exception {

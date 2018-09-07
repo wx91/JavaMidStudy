@@ -1,10 +1,10 @@
-package com.wangx.dubbo.sample.impl;
+package com.wangx.dubbo.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.wangx.dubbo.entity.User;
-import com.wangx.dubbo.sample.SampleService;
+import com.wangx.dubbo.service.SampleService;
 
 public class SampleServiceImpl implements SampleService {
 

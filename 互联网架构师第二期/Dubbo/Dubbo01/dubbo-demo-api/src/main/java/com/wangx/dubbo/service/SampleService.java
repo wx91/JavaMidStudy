@@ -1,4 +1,4 @@
-package com.wangx.dubbo.sample;
+package com.wangx.dubbo.service;
 
 import java.util.List;
 
