@@ -5,7 +5,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.EventType;
@@ -59,7 +58,7 @@ public class ZKWatcher implements Watcher {
 						System.out.println(p);
 						this.zk.exists(PARENT_PATH + "/" + p, true);
 					}
-				} catch (KeeperException | InterruptedException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -68,7 +67,7 @@ public class ZKWatcher implements Watcher {
 				System.out.println("节点创建");
 				try {
 					this.zk.exists(path, true);
-				} catch (KeeperException | InterruptedException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -78,7 +77,7 @@ public class ZKWatcher implements Watcher {
 				try {
 					// update nodes call function
 					this.zk.exists(path, true);
-				} catch (KeeperException | InterruptedException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -102,7 +101,7 @@ public class ZKWatcher implements Watcher {
 					System.out.println("cowaList: " + cowaList.toString());
 					System.out.println("paths: " + paths.toString());
 
-				} catch (KeeperException | InterruptedException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -112,7 +111,7 @@ public class ZKWatcher implements Watcher {
 				try {
 					// delete nodes call function
 					this.zk.exists(path, true);
-				} catch (KeeperException | InterruptedException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else
@@ -123,9 +122,7 @@ public class ZKWatcher implements Watcher {
 			System.out.println("权限检查失败");
 		} else if (KeeperState.Expired == keeperState) {
 			System.out.println("会话失效");
-		} else
-			;
-
+		}
 		System.out.println("--------------------------------------------");
 	}
 }

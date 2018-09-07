@@ -67,7 +67,7 @@ public class ZookeeperBase {
 		List<String> list = zk.getChildren("/testRoot", false);
 		for (String path : list) {
 			System.out.println(path);
-			String realPath = "/testRoot" + path;
+			String realPath = "/testRoot/" + path;
 			System.out.println(new String(zk.getData(realPath, false, null)));
 		}
 
@@ -82,6 +82,9 @@ public class ZookeeperBase {
 		zk.delete("/testRoot/children", -1);
 		System.out.println(zk.exists("/testRoot/children", false));
 
+		// 删除节点
+		zk.delete("/testRoot", -1);
+		System.out.println(zk.exists("/testRoot", false));
 		zk.close();
 	}
 }

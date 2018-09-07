@@ -8,6 +8,9 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
+
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import org.apache.zookeeper.ZooKeeper;
 
 public class Test {
@@ -39,7 +42,17 @@ public class Test {
 		// 进行阻塞
 		connectedSemaphore.await();
 
-		// //创建子节点
+		zk.create("/testRoot", "testRoot".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+
+		// 获取节点信息
+		byte[] data = zk.getData("/testRoot", false, null);
+		System.out.println(new String(data));
+		System.out.println(zk.getChildren("/testRoot", false));
+
+		// 创建父节点
+		zk.create("/super", "super".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+
+		// 创建子节点
 		zk.create("/super/c1", "c1".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		// 创建子节点
 		zk.create("/super/c2", "c2".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -49,11 +62,6 @@ public class Test {
 		zk.create("/super/c4", "c4".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		// 创建子节点
 		zk.create("/super/c4/c44", "c44".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-
-		// 获取节点信息
-		byte[] data = zk.getData("/testRoot", false, null);
-		System.out.println(new String(data));
-		System.out.println(zk.getChildren("/testRoot", false));
 
 		// 修改节点的值
 		zk.setData("/super/c1", "modify c1".getBytes(), -1);
