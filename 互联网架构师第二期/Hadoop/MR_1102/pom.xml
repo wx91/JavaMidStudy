@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.wangx</groupId>
-	<artifactId>hdfs1031</artifactId>
+	<artifactId>MR_110</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>hdfs1031</name>
+	<name>MR_110</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -39,6 +39,11 @@
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-hdfs</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-common</artifactId>
 			<version>${hadoop.version}</version>
 		</dependency>
 	</dependencies>
