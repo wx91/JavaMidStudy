@@ -25,6 +25,7 @@ public class HDFSTest {
 	public void begin() throws Exception {
 		// 加载src目录下的配置文件
 		conf = new Configuration();
+		conf.set("fs.defaultFS", "hdfs://node1:9000");
 		fs = FileSystem.get(conf);
 	}
 
@@ -36,7 +37,7 @@ public class HDFSTest {
 
 	@Test
 	public void upload() throws Exception {
-		Path path = new Path("/tmp/test");
+		Path path = new Path("/tmp/test.txt");
 		FSDataOutputStream outputStream = fs.create(path);
 		FileUtils.copyFile(new File("e://test.txt"), outputStream);
 	}
@@ -72,9 +73,9 @@ public class HDFSTest {
 
 	@Test
 	public void upload2() throws Exception {
-		Path path = new Path("/tmp/seq");
+		Path path = new Path("/tmp/seq.txt");
 		SequenceFile.Writer writer = SequenceFile.createWriter(fs, conf, path, Text.class, Text.class);
-		File file = new File("d://test");
+		File file = new File("e://test");
 		for (File f : file.listFiles()) {
 			writer.append(new Text(f.getName()), new Text(FileUtils.readFileToString(f)));
 		}
@@ -82,7 +83,7 @@ public class HDFSTest {
 
 	@Test
 	public void download2() throws Exception {
-		Path path = new Path("/tmp/seq");
+		Path path = new Path("/tmp/seq.txt");
 		SequenceFile.Reader reader = new SequenceFile.Reader(fs, path, conf);
 		Text key = new Text();
 		Text value = new Text();
@@ -96,7 +97,9 @@ public class HDFSTest {
 	@After
 	public void end() {
 		try {
-			fs.close();
+			if (fs != null) {
+				fs.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
