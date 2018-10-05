@@ -11,9 +11,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WCJob {
 	public static void main(String[] args) throws Exception {
-		
+		System.setProperty("HADOOP_USER_NAME", "root");
 		Configuration conf = new Configuration();
-		
+		conf.set("fs.defaultFS", "hdfs://node1:8020");
+		conf.set("hadoop.home.dir", "E:\\developer\\hadoop-2.8.5");
+		conf.set("yarn.resourcemanager.hostname", "node3");
+
 		Job job = Job.getInstance(conf);
 		job.setJarByClass(WCJob.class);
 
@@ -23,7 +26,7 @@ public class WCJob {
 
 		job.setReducerClass(WCReducer.class);
 
-		FileInputFormat.addInputPath(job, new Path("/wc/input/wc"));
+		FileInputFormat.addInputPath(job, new Path("/wc/input/wc.txt"));
 
 		Path outpath = new Path("/wc/output");
 		FileSystem fs = FileSystem.get(conf);
