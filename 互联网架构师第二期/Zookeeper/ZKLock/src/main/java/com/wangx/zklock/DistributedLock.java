@@ -1,0 +1,106 @@
+package com.wangx.zklock;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class DistributedLock {
+	private ZooKeeper zk = null;
+	private String selfPath;
+	private String waitPath;
+	private Watcher watcher;
+	private static final String GROUP_PATH = "/disLock";
+	private static final String SUB_PATH = "/disLocls/sub";
+	private static final String LOG_PREFIX_OF_THREAD = Thread.currentThread().getName();
+	private static final Logger LOG = LoggerFactory.getLogger(DistributedLock.class);
+
+	public DistributedLock(ZooKeeper zk) {
+		this.zk = zk;
+	}
+
+	public Watcher getWatcher() {
+		return watcher;
+	}
+
+	public void setWatcher(Watcher watcher) {
+		this.watcher = watcher;
+	}
+
+	public boolean checkMinPath() throws KeeperException, InterruptedException {
+		List<String> subNodes = zk.getChildren(GROUP_PATH, false);
+		Collections.sort(subNodes);
+		int index = subNodes.indexOf(selfPath.substring(GROUP_PATH.length() + 1));
+		switch (index) {
+		case -1: {
+			LOG.error(LOG_PREFIX_OF_THREAD + "本节点已不再了..." + selfPath);
+			return false;
+		}
+		case 0: {
+			LOG.info(LOG_PREFIX_OF_THREAD + "子节点中，我果然是老大" + selfPath);
+			return true;
+		}
+		default: {
+			this.waitPath = GROUP_PATH + "/" + subNodes.get(index - 1);
+			LOG.info(LOG_PREFIX_OF_THREAD + "获取子节点中，排在我前面的：" + waitPath);
+			try {
+				zk.getData(waitPath, this.watcher, new Stat());
+				return false;
+			} catch (KeeperException e) {
+				if (zk.exists(waitPath, false) == null) {
+					LOG.info(LOG_PREFIX_OF_THREAD + "子节点中，排在我前面的" + waitPath + "已失踪，幸福来的太突然");
+					return checkMinPath();
+				} else {
+					throw e;
+				}
+			}
+		}
+		}
+	}
+
+	public void unlock() {
+		try {
+			if (zk.exists(this.selfPath, false) == null) {
+				LOG.error(LOG_PREFIX_OF_THREAD + "本节点已不在了...");
+				return;
+			}
+			zk.delete(this.selfPath, -1);
+			LOG.info(LOG_PREFIX_OF_THREAD + "删除本节点：" + selfPath);
+			zk.close();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (KeeperException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean getLock() throws KeeperException, InterruptedException {
+		selfPath = zk.create(SUB_PATH, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+		LOG.info(LOG_PREFIX_OF_THREAD + "创建锁路径:" + selfPath);
+		if (checkMinPath()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean createPath(String path, String data) throws KeeperException, InterruptedException {
+		if (zk.exists(path, false) == null) {
+			LOG.info(LOG_PREFIX_OF_THREAD + "节点创建成功，Path"
+					+ this.zk.create(path, data.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+					+ ",content:" + data);
+		}
+		return true;
+	}
+
+	public String getWaitPath() {
+		return waitPath;
+	}
+
+}
